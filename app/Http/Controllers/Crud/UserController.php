@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Http\Controllers\Crud;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Users\UpdateRequest;
 use App\Models\User;
 use App\Services\Contracts\CrudInterface;
 use Illuminate\Contracts\View\View;
@@ -59,9 +60,9 @@ final class UserController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, User $user, CrudInterface $crud): RedirectResponse
+    public function update(UpdateRequest $request, User $user, CrudInterface $crud): RedirectResponse
     {
-        $crud->update($user, $request->all());
+        $crud->update($user, $request->validated());
         return redirect()->route('users.index');
     }
 
