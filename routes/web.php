@@ -2,10 +2,13 @@
 
 use App\Http\Controllers\Crud\UserController;
 use App\Http\Middleware\HasAdminMiddleware;
+use App\Models\User;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
-    return view('welcome');
+    $table = \Illuminate\Support\Facades\DB::table('users');
+    $model = User::query();
+    dd($model->get());
 });
 
 Route::resource('users', UserController::class);
