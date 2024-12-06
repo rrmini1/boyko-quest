@@ -29,6 +29,13 @@ class UpdateRequest extends FormRequest
         ];
     }
 
+    public function attributes(): array
+    {
+        return [
+            'name' => '"Имя пользователя"'
+        ];
+    }
+
     public function getName(): string
     {
         return $this->validated('name');
