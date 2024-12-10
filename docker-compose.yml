@@ -12,6 +12,7 @@ services:
         image: 'mysql:8.0'
         working_dir: /application
         volumes:
+            - my-dataVolume:/var/lib/mysql
             - '.:/application'
         environment:
             - MYSQL_ROOT_PASSWORD=password
@@ -37,3 +38,5 @@ services:
             - '.:/application'
             - './docker/php-fpm/php-ini-overrides.ini:/etc/php/8.4/fpm/conf.d/99-overrides.ini'
             - './docker/php-fpm/php-ini-overrides.ini:/etc/php/8.4/cli/conf.d/99-overrides.ini'
+volumes:
+    my-dataVolume:
