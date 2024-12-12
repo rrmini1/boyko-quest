@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Http\Requests\Users;
@@ -6,7 +7,7 @@ namespace App\Http\Requests\Users;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
-class UpdateRequest extends FormRequest
+class CreateRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -28,18 +29,7 @@ class UpdateRequest extends FormRequest
             'last_name'  => 'required|string|between:2,255',
             'email'      => 'required|string|email|max:50|'. Rule::unique('users')->ignore($this->user),
             'phone'      => 'required|string|between:10,15',
-            ];
-    }
-
-    public function attributes(): array
-    {
-        return [
-            'name' => '"Имя пользователя"'
+            'password'   => 'required|string|min:8|confirmed',
         ];
-    }
-
-    public function getName(): string
-    {
-        return $this->validated('name');
     }
 }
