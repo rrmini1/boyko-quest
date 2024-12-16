@@ -42,18 +42,20 @@ final class GoalController extends Controller
      */
     public function store(CreateRequest $request): RedirectResponse
     {
-        $this->goalRepository->create($request->validated());
-        return redirect()
-            ->route('goals.index')
-            ->with('success', __('Цель успешно создана'));
+        $goal = $this->goalRepository->create($request->validated());
+
+        return redirect()->route('projects.show', ['project' => $goal->project_id])
+            ->with('success',  __('Цель успешно добавлена'));
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(Goal $goal): View
     {
-        //
+        return view('goals.show', [
+            'goal' => $goal,
+        ]);
     }
 
     /**

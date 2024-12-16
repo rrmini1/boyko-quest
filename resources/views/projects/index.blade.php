@@ -17,19 +17,15 @@
           @forelse($projects as $project)
               <tr>
                   <td>{{ $project->id }}</td>
-                  <td>{{ $project->user_id }}</td>
+                  <td>{{ $project->user->last_name }}, {{ $project->user->name }} ({{ $project->user->email }})</td>
                   <td>{{ $project->name }}</td>
                   <td>{{ $project->created_at }}</td>
-                  <td><a
-                          href="{{ route('projects.edit', ['project' => $project->id]) }}"
-                          class="btn btn-outline-secondary btn-sm mb-1"
-                      >Редактировать</a>
-                  <form action="{{ route('projects.destroy', ['project' => $project]) }}" method="post">
-                      @csrf
-                      @method('DELETE')
-                      <a type="submit" class="btn btn-outline-danger btn-sm">Удалить</a>
-                  </form>
-{{--                      &nbsp; <a href="{{ route('users.destroy', ['user' => $user]) }}">Удаление</a></td>--}}
+                  <td>
+                      <a href="{{ route('projects.show', ['project' => $project->id]) }}" style="color:green;">Подробнее</a>
+                      &nbsp;
+                      <a href="{{ route('projects.edit', ['project' => $project->id]) }}">Редактировать</a>
+                      &nbsp; <a href="javascript:;" style="color:red;" class="delete" rel="{{ $project->id }}">Удалить</a>
+                  </td>
               </tr>
           @empty
               <tr>
@@ -38,4 +34,27 @@
           @endforelse
         </tbody>
     </table>
+
+    <script type="text/javascript">
+        document.addEventListener('DOMContentLoaded', function () {
+            const items = document.querySelectorAll('.delete');
+            items.forEach(function (item) {
+                item.addEventListener('click', function () {
+                    const id = this.getAttribute('rel');
+                    if (confirm("Вы уверены что хотите удалить проект с #ID = " + id)) {
+                        fetch(`/projects/${id}`, {
+                            method: "DELETE",
+                            headers: {
+                                "X-CSRF-TOKEN": document.querySelector("meta[name='csrf-token']").getAttribute('content')
+                            }
+                        }).then(response => {
+                            location.reload();
+                        });
+                    } else {
+                        alert('Удаление отменено');
+                    }
+                });
+            });
+        });
+    </script>
 @endsection

@@ -20,16 +20,8 @@
                   <td>{{ $user->name }} {{ $user->last_name }}</td>
                   <td>{{ $user->email }}</td>
                   <td>{{ $user->created_at }}</td>
-                  <td><a
-                          href="{{ route('users.edit', ['user' => $user->id]) }}"
-                          class="btn btn-outline-secondary mb-1"
-                      >Редактировать</a>
-                  <form action="{{ route('users.destroy', ['user' => $user]) }}" method="post">
-                      @csrf
-                      @method('DELETE')
-                      <button type="submit" class="btn btn-outline-danger btn-sm">Удалить</button>
-                  </form>
-{{--                      &nbsp; <a href="{{ route('users.destroy', ['user' => $user]) }}">Удаление</a></td>--}}
+                  <td><a href="{{ route('users.edit', ['user' => $user->id]) }}">Редактировать</a>
+                      &nbsp; <a href="javascript:;" class="delete" rel="{{ $user->id }}">Удаление</a></td>
               </tr>
           @empty
               <tr>
@@ -38,4 +30,27 @@
           @endforelse
         </tbody>
     </table>
+
+    <script type="text/javascript">
+        document.addEventListener('DOMContentLoaded', function () {
+            const items = document.querySelectorAll('.delete');
+            items.forEach(function (item) {
+                item.addEventListener('click', function () {
+                    const id = this.getAttribute('rel');
+                    if (confirm("Вы уверены что хотите удалить пользователя с #ID = " + id)) {
+                        fetch(`/users/${id}`, {
+                            method: "DELETE",
+                            headers: {
+                                "X-CSRF-TOKEN": document.querySelector("meta[name='csrf-token']").getAttribute('content')
+                            }
+                        }).then(response => {
+                            location.reload();
+                        });
+                    } else {
+                        alert('Удаление отменено');
+                    }
+                });
+            });
+        });
+    </script>
 @endsection

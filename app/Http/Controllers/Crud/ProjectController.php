@@ -56,9 +56,15 @@ final class ProjectController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(Project $project): View
     {
-        //
+        return view('projects.show', [
+            'project' => $project,
+            'report'  => [
+                'href' => route('projects.edit', $project),
+                'text' => __('Редактировать')
+            ]
+        ]);
     }
 
     /**
@@ -91,20 +97,20 @@ final class ProjectController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Project $project): RedirectResponse //JsonResponse
+    public function destroy(Project $project):  JsonResponse // RedirectResponse
     {
-//        try {
-//            $this->projectRepository->delete($project);
-//
-//            return response()->json('ok');
-//        } catch (\Throwable $exception) {
-//            return response()->json(['error' => $exception->getMessage()], 500);
-//        }
-        if ($this->projectRepository->delete($project)) {
-            return redirect()
-                ->route('users.index')
-                ->with('success', __('Проект безвозвратно удален'));
+        try {
+            $this->projectRepository->delete($project);
+
+            return response()->json('ok');
+        } catch (\Throwable $exception) {
+            return response()->json(['error' => $exception->getMessage()], 500);
         }
-        return back()->with('success', __('Что-то не удаляется проект :('));
+//        if ($this->projectRepository->delete($project)) {
+//            return redirect()
+//                ->route('users.index')
+//                ->with('success', __('Проект безвозвратно удален'));
+//        }
+//        return back()->with('success', __('Что-то не удаляется проект :('));
     }
 }
