@@ -47,7 +47,7 @@
             autoclose: true,
             todayHighlight: true,
         });
-        $("#started_at").datepicker("setDate", new Date());
+        $('#started_at').datepicker("setDate", new Date());
 
         $('#finished_at').datepicker({
             weekStart: 1,
@@ -55,6 +55,6 @@
             autoclose: true,
             todayHighlight: true,
         });
-        $("#finished_at").datepicker("setDate", new Date());
+        $('#finished_at').datepicker("setDate", new Date());
     </script>
 @endsection

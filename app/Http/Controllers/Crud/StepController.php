@@ -6,11 +6,12 @@ namespace App\Http\Controllers\Crud;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Step\CreateRequest;
+use App\Http\Requests\Step\UpdateRequest;
+use App\Models\Step;
 use App\Repository\GoalRepositoryInterface;
 use App\Repository\StepRepositoryInterface;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
 
 class StepController extends Controller
 {
@@ -60,17 +61,29 @@ class StepController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function edit(Step  $step): View
     {
-        //
+        return view('steps.edit', [
+            'step' => $step,
+            'goals' => $this->goalRepository->list(),
+        ]);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(UpdateRequest $request, Step $step)
     {
-        //
+//        dd($request);
+        $step = $this->stepRepository->update($step, $request->validated());
+
+        if ($step) {
+            return redirect()
+                ->route('steps.index')
+                ->with('success', __('Шаг успешно обновлен'));
+        }
+
+        return back()->with('error', __('Не удалось обновить шаг'));
     }
 
     /**

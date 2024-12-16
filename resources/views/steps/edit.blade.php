@@ -1,6 +1,6 @@
 @extends('layouts.app')
 @section('title')
-    Редактировать цель
+    Редактировать шаг
 @endsection
 
 @section('content')
@@ -11,16 +11,16 @@
             @endforeach
         @endif
 
-        <form method="post" action="{{ route('goals.update', ['goal' => $goal]) }}">
+        <form method="post" action="{{ route('steps.update', ['step' => $step]) }}">
             @csrf
             @method('put')
             <div class="form-group">
-                <label for="project">{{ __('Проект') }}</label>
-                <select class="form-control" id="project" name="project_id">
-                    @foreach($projects as $project)
+                <label for="goal">{{ __('Цель') }}</label>
+                <select class="form-control" id="goal" name="goal_id">
+                    @foreach($goals as $goal)
                         <option
-                            @if($goal->project_id === $project->id) selected @endif
-                            value="{{ $project->id }}">{{ $project->name }}</option>
+                            @if($step->goal_id === $goal->id) selected @endif
+                            value="{{ $goal->id }}">{{ $goal->name }}</option>
                     @endforeach
                 </select>
             </div>
@@ -32,21 +32,52 @@
                     id="name"
                     class="form-control"
                     name="name"
-                    value="{{ $goal->name }}"
+                    value="{{ $step->name }}"
                     required>
             </div>
 
             <div class="form-group">
-                <label for="term_in_months">{{ __('Срок в месяцах') }}</label>
+                <label for="started_at">{{ __('Начало') }}</label>
                 <input
-                    type="text"
-                    id="term_in_months"
+                    data-date-format="dd/mm/yyyy"
+                    id="started_at"
                     class="form-control"
-                    name="term_in_months"
-                    value="{{ $goal->term_in_months }}">
+                    name="started_at"
+                    value="{{ $step->started_at }}">
+            </div>
+
+            <div class="form-group">
+                <label for="finished_at">{{ __('Окончание') }}</label>
+                <input
+                    data-date-format="dd/mm/yyyy"
+                    id="finished_at"
+                    class="form-control"
+                    name="finished_at"
+                    value="{{ $step->finished_at }}">>
             </div>
             <br>
             <button class="btn btn-success" type="submit">Сохранить</button>
         </form>
     </div>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.7.1/js/bootstrap-datepicker.min.js"></script>
+
+    <script type="text/javascript">
+        $('#started_at').datepicker({
+            weekStart: 1,
+            daysOfWeekHighlighted: "6,0",
+            autoclose: true,
+            todayHighlight: true,
+        });
+        $("#started_at").datepicker("setDate", new Date());
+
+        $('#finished_at').datepicker({
+            weekStart: 1,
+            daysOfWeekHighlighted: "6,0",
+            autoclose: true,
+            todayHighlight: true,
+        });
+        $("#finished_at").datepicker("setDate", new Date());
+    </script>
 @endsection
