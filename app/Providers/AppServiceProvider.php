@@ -15,6 +15,7 @@ use App\Repository\StepRepository;
 use App\Repository\StepRepositoryInterface;
 use App\Repository\UserRepository;
 use App\Repository\UserRepositoryInterface;
+use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -42,6 +43,9 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        Relation::enforceMorphMap([
+            'post' => 'App\Models\Post',
+            'video' => 'App\Models\Video',
+        ]);
     }
 }

@@ -58,35 +58,35 @@
 
     <!-- Goals -->
 
-    <li class="nav-item @if(request()->is('goals') || request()->is('goals/*')) active @endif">
-        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#goals"
-           aria-expanded="true" aria-controls="goals">
-            <i class="fas fa-fw fa-wrench"></i>
-            <span>{{ __('sidebar.goals') }}</span>
-        </a>
-        <div id="goals" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
-            <div class="bg-white py-2 collapse-inner rounded">
-                <a class="collapse-item" href="{{ route('goals.create') }}">{{ __('sidebar.add_new_goal') }}</a>
-                <a class="collapse-item" href="{{ route('goals.index') }}">{{ __('sidebar.goals_list') }}</a>
-            </div>
-        </div>
-    </li>
+{{--    <li class="nav-item @if(request()->is('goals') || request()->is('goals/*')) active @endif">--}}
+{{--        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#goals"--}}
+{{--           aria-expanded="true" aria-controls="goals">--}}
+{{--            <i class="fas fa-fw fa-wrench"></i>--}}
+{{--            <span>{{ __('sidebar.goals') }}</span>--}}
+{{--        </a>--}}
+{{--        <div id="goals" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">--}}
+{{--            <div class="bg-white py-2 collapse-inner rounded">--}}
+{{--                <a class="collapse-item" href="{{ route('goals.create') }}">{{ __('sidebar.add_new_goal') }}</a>--}}
+{{--                <a class="collapse-item" href="{{ route('goals.index') }}">{{ __('sidebar.goals_list') }}</a>--}}
+{{--            </div>--}}
+{{--        </div>--}}
+{{--    </li>--}}
 
     <!-- Steps -->
 
-    <li class="nav-item @if(request()->is('steps') || request()->is('steps/*')) active @endif">
-        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#steps"
-           aria-expanded="true" aria-controls="steps">
-            <i class="fas fa-fw fa-wrench"></i>
-            <span>{{ __('sidebar.steps') }}</span>
-        </a>
-        <div id="steps" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
-            <div class="bg-white py-2 collapse-inner rounded">
-                <a class="collapse-item" href="{{ route('steps.create') }}">{{ __('sidebar.add_new_step') }}</a>
-                <a class="collapse-item" href="{{ route('steps.index') }}">{{ __('sidebar.steps_list') }}</a>
-            </div>
-        </div>
-    </li>
+{{--    <li class="nav-item @if(request()->is('steps') || request()->is('steps/*')) active @endif">--}}
+{{--        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#steps"--}}
+{{--           aria-expanded="true" aria-controls="steps">--}}
+{{--            <i class="fas fa-fw fa-wrench"></i>--}}
+{{--            <span>{{ __('sidebar.steps') }}</span>--}}
+{{--        </a>--}}
+{{--        <div id="steps" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">--}}
+{{--            <div class="bg-white py-2 collapse-inner rounded">--}}
+{{--                <a class="collapse-item" href="{{ route('steps.create') }}">{{ __('sidebar.add_new_step') }}</a>--}}
+{{--                <a class="collapse-item" href="{{ route('steps.index') }}">{{ __('sidebar.steps_list') }}</a>--}}
+{{--            </div>--}}
+{{--        </div>--}}
+{{--    </li>--}}
     <!-- Nav Item - Utilities Collapse Menu -->
 {{--    <li class="nav-item">--}}
 {{--        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseUtilities"--}}
