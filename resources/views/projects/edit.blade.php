@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.main')
 @section('title')
     Редактировать проект
 @endsection
@@ -19,7 +19,7 @@
                 <select class="form-control" id="user" name="user_id">
                     @foreach($users as $user)
                         <option @if($project->user_id === $user->id) selected @endif
-                                value="{{ $user->id }}">{{ $user->email }}
+                        value="{{ $user->id }}">{{ $user->email }}
                         </option>
                     @endforeach
                 </select>
@@ -28,12 +28,12 @@
             <div class="form-group">
                 <label for="name">{{ __('Наименование') }}</label>
                 <input
-                    type="text"
-                    id="name"
-                    class="form-control"
-                    name="name"
-                    value="{{ $project->name }}"
-                    required>
+                        type="text"
+                        id="name"
+                        class="form-control"
+                        name="name"
+                        value="{{ $project->name }}"
+                        required>
             </div>
 
             <div class="form-group">
@@ -43,7 +43,7 @@
 
             <div class="form-group">
                 <label for="description">{{ __('Описание') }}</label>
-                <textarea  class="form-control" name="description" id="description">
+                <textarea class="form-control" name="description" id="description">
                     {!! $project->description !!}
                 </textarea>
             </div>

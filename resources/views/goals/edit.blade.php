@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.main')
 @section('title')
     Редактировать цель
 @endsection
@@ -20,7 +20,7 @@
                     @foreach($projects as $project)
                         <option
                             @if($goal->project_id === $project->id) selected @endif
-                            value="{{ $project->id }}">{{ $project->name }}</option>
+                        value="{{ $project->id }}">{{ $project->name }}</option>
                     @endforeach
                 </select>
             </div>
@@ -39,7 +39,7 @@
             <div class="form-group">
                 <label for="term_in_months">{{ __('Срок в месяцах') }}</label>
                 <input
-                    type="text"
+                    type="number"
                     id="term_in_months"
                     class="form-control"
                     name="term_in_months"

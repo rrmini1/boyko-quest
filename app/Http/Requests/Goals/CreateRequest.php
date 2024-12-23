@@ -6,7 +6,7 @@ namespace App\Http\Requests\Goals;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class CreateRequest extends FormRequest
+final class CreateRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -26,7 +26,12 @@ class CreateRequest extends FormRequest
         return [
             'project_id' => 'required|integer|exists:projects,id',
             'name' => 'required|string|max:155',
-            'term_in_months' => 'required|string|max:2',
+            'term_in_months' => 'required|integer|min:1|max:60',
         ];
+    }
+
+    public function getProjectId(): int
+    {
+        return $this->validated('project_id');
     }
 }

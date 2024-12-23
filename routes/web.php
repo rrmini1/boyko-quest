@@ -4,11 +4,20 @@ use App\Http\Controllers\Crud\GoalController;
 use App\Http\Controllers\Crud\ProjectController;
 use App\Http\Controllers\Crud\StepController;
 use App\Http\Controllers\Crud\UserController;
-use App\Http\Middleware\HasAdminMiddleware;
+use App\Models\Post;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     return view('welcome');
+});
+
+Route::get('/test', function () {
+//    $post = Post::find(1);
+//    foreach ($post->tags as $tag) {
+//        echo $tag->name . "<br>";
+//    }
+
+//    dd(\App\Models\User::query()->admin()->get());
 });
 
 Route::resource('/users', UserController::class);

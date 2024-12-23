@@ -24,10 +24,9 @@ class UpdateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'goal_id' => 'required|integer|exists:projects,id',
             'name' => 'required|string|max:155',
-            'started_at' => 'required|date',
-            'finished_at' => 'required|date',
+            'started_at' => 'required|date|date_format:Y-m-d',
+            'finished_at' => 'required|date|date_format:Y-m-d|after_or_equal:started_at',
         ];
     }
 }

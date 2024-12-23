@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers\Crud;
 
 use App\Http\Controllers\Controller;
@@ -9,6 +11,7 @@ use App\Models\Goal;
 use App\Repository\GoalRepositoryInterface;
 use App\Repository\ProjectRepositoryInterface;
 use Illuminate\Contracts\View\View;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 
 final class GoalController extends Controller
@@ -42,18 +45,20 @@ final class GoalController extends Controller
      */
     public function store(CreateRequest $request): RedirectResponse
     {
-        $this->goalRepository->create($request->validated());
-        return redirect()
-            ->route('goals.index')
-            ->with('success', __('Цель успешно создана'));
+        $goal = $this->goalRepository->create($request->validated());
+
+        return redirect()->route('projects.show', ['project' => $goal->project_id])
+            ->with('success',  __('Цель успешно добавлена'));
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(Goal $goal): View
     {
-        //
+        return view('goals.show', [
+            'goal' => $goal,
+        ]);
     }
 
     /**
@@ -72,11 +77,11 @@ final class GoalController extends Controller
      */
     public function update(UpdateRequest $request, Goal $goal)
     {
-        $goal = $this->goalRepository->update($goal, $request->validated());
+        $status = $this->goalRepository->update($goal, $request->validated());
 
-        if ($goal) {
+        if ($status) {
             return redirect()
-                ->route('goals.index')
+                ->route('projects.show', ['project' => $goal->project_id])
                 ->with('success', __('Цель успешно обновлена'));
         }
 
@@ -86,8 +91,14 @@ final class GoalController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(Goal $goal): JsonResponse
     {
-        //
+        try {
+            $this->goalRepository->delete($goal);
+
+            return response()->json('ok');
+        } catch (\Throwable $exception) {
+            return response()->json(['error' => $exception->getMessage()], 500);
+        }
     }
 }

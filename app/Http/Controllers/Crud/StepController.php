@@ -11,22 +11,21 @@ use App\Models\Step;
 use App\Repository\GoalRepositoryInterface;
 use App\Repository\StepRepositoryInterface;
 use Illuminate\Contracts\View\View;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 
-class StepController extends Controller
+final class StepController extends Controller
 {
     public function __construct(
         private readonly StepRepositoryInterface $stepRepository,
-        private readonly GoalRepositoryInterface $goalRepository
+//        private readonly GoalRepositoryInterface $goalRepository
     ) {}
     /**
      * Display a listing of the resource.
      */
-    public function index(): View
+    public function index()
     {
-        return view('steps.index', [
-            'steps' => $this->stepRepository->list(),
-        ]);
+        //
     }
 
     /**
@@ -35,7 +34,7 @@ class StepController extends Controller
     public function create(): View
     {
         return view('steps.create', [
-            'goals' => $this->goalRepository->list(),
+//            'goals' => $this->goalRepository->list(),
         ]);
     }
 
@@ -46,7 +45,7 @@ class StepController extends Controller
     {
         $this->stepRepository->create($request->validated());
         return redirect()
-            ->route('steps.index')
+            ->route('goals.show', ['goal' => $request->goal_id])
             ->with('success', __('Шаг успешно создан'));
     }
 
@@ -65,21 +64,20 @@ class StepController extends Controller
     {
         return view('steps.edit', [
             'step' => $step,
-            'goals' => $this->goalRepository->list(),
+//            'goals' => $this->goalRepository->list(),
         ]);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateRequest $request, Step $step)
+    public function update(UpdateRequest $request, Step $step): RedirectResponse
     {
-//        dd($request);
-        $step = $this->stepRepository->update($step, $request->validated());
+        $status = $this->stepRepository->update($step, $request->validated());
 
-        if ($step) {
+        if ($status) {
             return redirect()
-                ->route('steps.index')
+                ->route('goals.show', ['goal' => $step->goal_id])
                 ->with('success', __('Шаг успешно обновлен'));
         }
 
@@ -89,8 +87,14 @@ class StepController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(Step $step): JsonResponse
     {
-        //
+        try {
+            $this->stepRepository->delete($step);
+
+            return response()->json('ok');
+        } catch (\Throwable $exception) {
+            return response()->json(['error' => $exception->getMessage()], 500);
+        }
     }
 }
