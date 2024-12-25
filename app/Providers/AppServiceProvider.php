@@ -1,8 +1,11 @@
 <?php
 
 declare(strict_types=1);
+
 namespace App\Providers;
 
+use App\Events\CreatedGoal;
+use App\Listeners\SendEmailListener;
 use App\Models\Goal;
 use App\Models\Project;
 use App\Models\Step;
@@ -16,6 +19,7 @@ use App\Repository\StepRepositoryInterface;
 use App\Repository\UserRepository;
 use App\Repository\UserRepositoryInterface;
 use Illuminate\Database\Eloquent\Relations\Relation;
+use Illuminate\Support\Facades\Event;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -46,6 +50,10 @@ class AppServiceProvider extends ServiceProvider
         Relation::enforceMorphMap([
             'post' => 'App\Models\Post',
             'video' => 'App\Models\Video',
+        ]);
+
+        Event::listen([
+            CreatedGoal::class => SendEmailListener::class,
         ]);
     }
 }
