@@ -70,6 +70,11 @@ class User extends Authenticatable
         return $this->hasMany(Project::class, 'user_id', 'id');
     }
 
+    public function networks(): HasMany
+    {
+        return $this->hasMany(Network::class, 'user_id');
+    }
+
     public function scopeAdmin(Builder $query): void
     {
         $query->where('is_admin', 1);

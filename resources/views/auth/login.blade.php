@@ -45,7 +45,7 @@
                                         {{ __('Вход') }}
                                     </button>
                                     <hr>
-                                    <a href="index.html" class="btn btn-facebook btn-user btn-block">
+                                    <a href="http://localhost/redirect/vkontakte" class="btn btn-facebook btn-user btn-block">
                                         <i class="fab fa-vimeo fa-fw"></i> {{ __('Вход через VK') }}
                                     </a>
                                 </form>
