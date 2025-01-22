@@ -13,10 +13,13 @@ final class ProjectRepository extends BaseRepository implements ProjectRepositor
     {
     }
 
-    public function list(): Collection
+    public function list(bool $isApi = false): Collection
     {
         $newQuery = $this->model->newQuery();
 
+        if ($isApi) {
+            return $newQuery->select(['id', 'name', 'description', 'image', 'created_at'])->get();
+        }
         return $newQuery->with('user')->get();
     }
 }

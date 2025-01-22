@@ -24,6 +24,7 @@ use App\Repository\UserRepositoryInterface;
 use App\Services\SocialUser;
 use App\Services\SocialUserInterface;
 use Illuminate\Database\Eloquent\Relations\Relation;
+use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\ServiceProvider;
 use SocialiteProviders\GitHub\Provider as GitHubProvider;
@@ -75,5 +76,7 @@ class AppServiceProvider extends ServiceProvider
             $event->extendSocialite('github', GitHubProvider::class);
             $event->extendSocialite('vkontakte', VKProvider::class);
         });
+
+        JsonResource::withoutWrapping();
     }
 }
