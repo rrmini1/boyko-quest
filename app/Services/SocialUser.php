@@ -11,8 +11,13 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use Laravel\Socialite\Contracts\User;
 
+use Illuminate\Contracts\Auth\Factory as Auth;
+
 final class SocialUser implements SocialUserInterface
 {
+    public function __construct(
+        private readonly Auth $auth,
+    ) {}
     public function createOrUpdateUserViaSocialNetwork(User $socialUser, string $provider): UserModel
     {
         $password = null;
@@ -55,7 +60,7 @@ final class SocialUser implements SocialUserInterface
 
         event(new SocialUserEvent($user, $dto));
 
-        \Auth::login($user);
+        $this->auth->guard()->login($user);
 
         return $user;
     }

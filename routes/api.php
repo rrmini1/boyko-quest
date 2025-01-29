@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\API\AuthController;
 use App\Http\Controllers\API\ProjectController;
+use App\Http\Resources\UserCollection;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -24,4 +25,8 @@ Route::group([
 
 Route::group(['middleware' => 'auth:api'], function () {
     Route::apiResource('projects', ProjectController::class);
+});
+
+Route::get('users', function () {
+    return new UserCollection(\App\Models\User::paginate(10));
 });

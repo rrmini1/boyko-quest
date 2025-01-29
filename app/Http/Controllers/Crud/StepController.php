@@ -8,7 +8,6 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Step\CreateRequest;
 use App\Http\Requests\Step\UpdateRequest;
 use App\Models\Step;
-use App\Repository\GoalRepositoryInterface;
 use App\Repository\StepRepositoryInterface;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\JsonResponse;
@@ -18,7 +17,6 @@ final class StepController extends Controller
 {
     public function __construct(
         private readonly StepRepositoryInterface $stepRepository,
-//        private readonly GoalRepositoryInterface $goalRepository
     ) {}
     /**
      * Display a listing of the resource.

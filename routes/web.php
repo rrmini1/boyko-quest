@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Account\IndexController;
+use App\Http\Controllers\CacheController;
 use App\Http\Controllers\Crud\GoalController;
 use App\Http\Controllers\Crud\ProjectController;
 use App\Http\Controllers\Crud\StepController;
@@ -30,3 +31,5 @@ Route::middleware(['auth', HasAdminMiddleware::class])->group(function (){
         Route::resource('/steps', StepController::class);
     });
 });
+
+Route::get('cache', CacheController::class);
