@@ -7,12 +7,16 @@ namespace App\Http\Controllers\Crud;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Projects\CreateRequest;
 use App\Http\Requests\Projects\UpdateRequest;
+use App\Mail\ProjectMail;
 use App\Models\Project;
+use App\Notifications\StatNotification;
 use App\Repository\ProjectRepositoryInterface;
 use App\Repository\UserRepositoryInterface;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
 
 final class ProjectController extends Controller
 {
@@ -45,7 +49,10 @@ final class ProjectController extends Controller
      */
     public function store(CreateRequest $request): RedirectResponse
     {
-        $this->projectRepository->create($request->validated());
+        $project = $this->projectRepository->create($request->validated());
+
+        Mail::to($project->user)->send(new ProjectMail($project));
+
         return redirect()
             ->route('projects.index')
             ->with('success', __('Проект успешно создан'));
@@ -83,9 +90,12 @@ final class ProjectController extends Controller
      */
     public function update(UpdateRequest $request, Project $project): RedirectResponse
     {
-        $project = $this->projectRepository->update($project, $request->validated());
+        $status = $this->projectRepository->update($project, $request->validated());
 
-        if ($project) {
+        if ($status) {
+            $delay = now()->addMinutes();
+            $user = $project->user ?? Auth::user();
+            $user->notify((new StatNotification($project))->delay($delay));
             return redirect()
                 ->route('projects.index')
                 ->with('success', __('Проект успешно обновлен'));
