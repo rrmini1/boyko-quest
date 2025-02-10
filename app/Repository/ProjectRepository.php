@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Repository;
 
+use App\Models\Project;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 
@@ -21,5 +22,11 @@ final class ProjectRepository extends BaseRepository implements ProjectRepositor
             return $newQuery->select(['id', 'name', 'description', 'image', 'created_at'])->get();
         }
         return $newQuery->with('user')->get();
+    }
+
+    public function saveImage(Project $project, string $linkToImage): void
+    {
+        $project->image = $linkToImage;
+        $project->save();
     }
 }

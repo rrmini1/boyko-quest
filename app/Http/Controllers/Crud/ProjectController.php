@@ -12,6 +12,7 @@ use App\Models\Project;
 use App\Notifications\StatNotification;
 use App\Repository\ProjectRepositoryInterface;
 use App\Repository\UserRepositoryInterface;
+use App\Services\FileUpload;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
@@ -21,6 +22,7 @@ use Illuminate\Support\Facades\Mail;
 final class ProjectController extends Controller
 {
     public function __construct(
+        private FileUpload $fileUpload,
         private readonly USerRepositoryInterface $userRepository,
         private readonly ProjectRepositoryInterface $projectRepository
     ) {}
@@ -50,6 +52,14 @@ final class ProjectController extends Controller
     public function store(CreateRequest $request): RedirectResponse
     {
         $project = $this->projectRepository->create($request->validated());
+        if ($request->hasFile('image')) {
+            $file = $request->file('image');
+            if ($file->isValid()) {
+                /** @var Project $project */
+                $link = $this->fileUpload->upload($file, $project);
+                $this->projectRepository->saveImage($project, $link);
+            }
+        }
 
         Mail::to($project->user)->send(new ProjectMail($project));
 
@@ -90,9 +100,19 @@ final class ProjectController extends Controller
      */
     public function update(UpdateRequest $request, Project $project): RedirectResponse
     {
-        $status = $this->projectRepository->update($project, $request->validated());
+        $data = $request->validated();
+        unset($data['image']);
+
+        $status = $this->projectRepository->update($project, $data);
 
         if ($status) {
+            if ($request->hasFile('image')) {
+                $file = $request->file('image');
+                if ($file->isValid()) {
+                    $link = $this->fileUpload->upload($file, $project);
+                    $this->projectRepository->saveImage($project, $link);
+                }
+            }
             $delay = now()->addMinutes();
             $user = $project->user ?? Auth::user();
             $user->notify((new StatNotification($project))->delay($delay));
@@ -116,11 +136,5 @@ final class ProjectController extends Controller
         } catch (\Throwable $exception) {
             return response()->json(['error' => $exception->getMessage()], 500);
         }
-//        if ($this->projectRepository->delete($project)) {
-//            return redirect()
-//                ->route('users.index')
-//                ->with('success', __('Проект безвозвратно удален'));
-//        }
-//        return back()->with('success', __('Что-то не удаляется проект :('));
     }
 }

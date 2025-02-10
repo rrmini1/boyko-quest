@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace App\Repository;
 
-interface ProjectRepositoryInterface
-{
+use App\Models\Project;
 
+interface ProjectRepositoryInterface extends RepositoryInterface
+{
+    public function saveImage (Project $project, string $linkToImage): void;
 }
