@@ -6,6 +6,7 @@ use App\Http\Controllers\Crud\GoalController;
 use App\Http\Controllers\Crud\ProjectController;
 use App\Http\Controllers\Crud\StepController;
 use App\Http\Controllers\Crud\UserController;
+use App\Http\Controllers\ExportController;
 use App\Http\Controllers\SocialNetworksController;
 use App\Http\Middleware\HasAdminMiddleware;
 use Illuminate\Support\Facades\Route;
@@ -22,7 +23,8 @@ Route::middleware(['guest'])->group(function () {
 Route::middleware(['auth', HasAdminMiddleware::class])->group(function (){
     Route::get('/account', IndexController::class)
         ->name('account')
-        ->withoutMiddleware(HasAdminMiddleware::class);
+        ->withoutMiddleware(HasAdminMiddleware::class)->name('account');
+    Route::get('/export', ExportController::class)->name('export');
     // Админка
     Route::prefix('admin')->group(function () {
         Route::resource('/users', UserController::class);

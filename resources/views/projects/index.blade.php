@@ -1,6 +1,6 @@
 @extends('layouts.main')
 @section('title')
-    Проекты
+    Проекты &nbsp; <a href="{{ route('export') }}">Export </a>
 @endsection
 
 @section('content')

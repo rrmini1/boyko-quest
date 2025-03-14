@@ -5,7 +5,11 @@ declare(strict_types=1);
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
+use App\Models\User;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\Rule;
 
 final class AuthController extends Controller
 {
@@ -19,12 +23,26 @@ final class AuthController extends Controller
         $this->middleware('auth:api', ['except' => ['login']]);
     }
 
-    /**
-     * Get a JWT via given credentials.
-     *
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function login()
+    public function register(Request $request): JsonResponse
+    {
+        $request->validate([
+            'name'       => 'required|string|between:2,255',
+            'email'      => 'required|string|email|max:50|unique:users',
+            'password'   => 'required|string|min:8',
+        ]);
+
+        $user = User::query()->create([
+            'name' => $request->name,
+            'email' => $request->email,
+            'password' => Hash::make($request->password),
+        ]);
+
+        return response()->json([
+            'token' => $user->createToken('API Token')->plainTextToken
+        ], 201);
+    }
+
+    public function login(): JsonResponse
     {
         $credentials = request(['email', 'password']);
 
@@ -35,22 +53,13 @@ final class AuthController extends Controller
         return $this->respondWithToken($token);
     }
 
-    /**
-     * Get the authenticated User.
-     *
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function me()
+
+    public function me(): JsonResponse
     {
         return response()->json(auth()->user());
     }
 
-    /**
-     * Log the user out (Invalidate the token).
-     *
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function logout()
+    public function logout(): JsonResponse
     {
         auth()->logout();
 
