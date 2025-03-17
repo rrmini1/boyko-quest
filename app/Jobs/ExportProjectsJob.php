@@ -25,14 +25,13 @@ final class ExportProjectsJob implements ShouldQueue
     public function handle(): void
     {
         $pathToCsv= storage_path('/app/private/projects.xlsx');
-        $writer = SimpleExcelWriter::create($pathToCsv, 'xlsx');
+        $writer = SimpleExcelWriter::create($pathToCsv);
+        $writer->addHeader(['id', 'name']);
         foreach ($this->projects as $project) {
             $writer->addRow([
-                'id' => $project->id,
-                'name' => $project->name
+                 $project->id,
+                 $project->name
             ]);
-            $writer->close();
         }
-
     }
 }

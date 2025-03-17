@@ -17,12 +17,6 @@ final class ExportController extends Controller
     {
         $projects = Project::query()->get();
 
-//        $data = [];
-//        foreach ($projects as $project) {
-//            $data[] = ['id' => $project->id, 'name' => $project->name];
-//        }
-//
-//        dd($data);
         dispatch(new ExportProjectsJob($projects));
 
         return back()->with('success', 'Projects exported');

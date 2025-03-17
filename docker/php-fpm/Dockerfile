@@ -1,28 +1,33 @@
-FROM phpdockerio/php:8.4-fpm
-ARG NODE_VERSION=20
-WORKDIR "/application"
+FROM php:8.4-fpm-alpine3.20
 
-RUN apt-get update \
-    && apt-get -y --no-install-recommends install \
-        php8.4-amqp \
-        php8.4-imagick \
-        php8.4-intl \
-        php8.4-mysql \
-        php8.4-redis \
-        php8.4-sqlite3 \
-        php8.4-xdebug \
-    && apt-get clean \
-    && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* /usr/share/doc/* \
-    && curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key | gpg --dearmor -o /etc/apt/keyrings/nodesource.gpg \
-    && echo "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesource.com/node_$NODE_VERSION.x nodistro main" > /etc/apt/sources.list.d/nodesource.list \
-    && apt-get update \
-    && apt-get install -y nodejs \
-    && npm install -g npm \
-    && npm install -g pnpm \
-    && npm install -g bun \
-    && curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | gpg --dearmor | tee /etc/apt/keyrings/yarn.gpg >/dev/null \
-    && echo "deb [signed-by=/etc/apt/keyrings/yarn.gpg] https://dl.yarnpkg.com/debian/ stable main" > /etc/apt/sources.list.d/yarn.list \
-    && curl -sS https://www.postgresql.org/media/keys/ACCC4CF8.asc | gpg --dearmor | tee /etc/apt/keyrings/pgdg.gpg >/dev/null \
-    && echo "deb [signed-by=/etc/apt/keyrings/pgdg.gpg] http://apt.postgresql.org/pub/repos/apt jammy-pgdg main" > /etc/apt/sources.list.d/pgdg.list \
-    && apt-get update \
-    && apt-get install -y yarn \
+# Установка необходимых зависимостей
+RUN apk add --no-cache\
+    linux-headers  \
+    git \
+    unzip \
+    zip \
+    libzip-dev \
+    autoconf \
+    make \
+    && docker-php-ext-install pdo pdo_mysql zip bcmath pcntl sockets \
+    && apk add --update --no-cache --virtual .build-dependencies $PHPIZE_DEPS \
+    && pecl install xdebug \
+    && docker-php-ext-enable xdebug \
+    && pecl install redis \
+    && docker-php-ext-enable redis \
+    && pecl clear-cache \
+    && rm -rf /var/cache/apk/* \
+    && apk --update add supervisor
+
+RUN echo "xdebug.mode=debug" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
+RUN echo "xdebug.start_with_request = yes" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
+RUN echo "xdebug.client_host=docker.for.mac.localhost" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
+RUN echo "xdebug.client_port=9001" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
+RUN echo "xdebug.log=/var/log/xdebug.log" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
+RUN echo "xdebug.idekey = PHPSTORM" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
+
+# Установка Composer
+COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
+COPY ./docker/php-fpm/php.ini /usr/local/etc/php/php.ini
+
+WORKDIR /application
