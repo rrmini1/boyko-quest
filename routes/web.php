@@ -7,6 +7,7 @@ use App\Http\Controllers\Crud\ProjectController;
 use App\Http\Controllers\Crud\StepController;
 use App\Http\Controllers\Crud\UserController;
 use App\Http\Controllers\ExportController;
+use App\Http\Controllers\RabbitMQController;
 use App\Http\Controllers\SocialNetworksController;
 use App\Http\Middleware\HasAdminMiddleware;
 use Illuminate\Support\Facades\Route;
@@ -35,3 +36,8 @@ Route::middleware(['auth', HasAdminMiddleware::class])->group(function (){
 });
 
 Route::get('cache', CacheController::class);
+
+
+// Test rabbitMq
+
+Route::get('rabbitmq', RabbitMqController::class);

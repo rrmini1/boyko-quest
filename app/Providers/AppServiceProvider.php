@@ -24,6 +24,7 @@ use App\Repository\UserRepositoryInterface;
 use App\Services\Cache\CacheInterface;
 use App\Services\Cache\cacheService;
 use App\Services\FileUpload;
+use App\Services\Output\RabbitMqService;
 use App\Services\SocialUser;
 use App\Services\SocialUserInterface;
 use Illuminate\Contracts\Auth\Factory as AuthFactory;
@@ -64,6 +65,12 @@ class AppServiceProvider extends ServiceProvider
         ));
 
         $this->app->bind(FileUpload::class, fn() => new FileUpload());
+        $this->app->bind(RabbitMqService::class, fn() => new RabbitMqService(
+            config('rabbitmq.host'),
+            config('rabbitmq.port'),
+            config('rabbitmq.user'),
+            config('rabbitmq.password')
+        ));
     }
 
     /**

@@ -15,7 +15,8 @@
         "predis/predis": "^2.3",
         "socialiteproviders/github": "^4.1",
         "socialiteproviders/vkontakte": "^5.0",
-        "spatie/simple-excel": "^3.7"
+        "spatie/simple-excel": "^3.7",
+        "php-amqplib/php-amqplib": "^3.2"
     },
     "require-dev": {
         "barryvdh/laravel-debugbar": "^3.14",
